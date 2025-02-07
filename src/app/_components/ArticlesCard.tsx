@@ -1,23 +1,18 @@
-"use client"; 
+"use client";
 
 import Link from "next/link";
 import { Post } from "../_types/Post";
 
 type ArticlesCardProps = {
   post: Post;
-  className?: string; 
 };
 
-export const ArticlesCard: React.FC<ArticlesCardProps> = ({
-  post,
-  className,
-}) => {
-  
+export const ArticlesCard: React.FC<ArticlesCardProps> = ({ post }) => {
   const date = new Date(post.createdAt).toLocaleDateString("ja-JP");
   return (
     <Link
-      href={`/posts/${post.id}`} 
-      className={`block border border-gray-400 my-8 mx-auto py-4 pl-6 pr-20 w-[800px] max-w-[800px] ${className} `}
+      href={`/posts/${post.id}`}
+      className={`block border border-gray-400 my-8 mx-auto py-4 pl-6 pr-20 w-[800px] max-w-[800px]`}//border-noneは不必要なので削除
     >
       <div className="text-sm float-left">{date}</div>
       <div className="float-right">

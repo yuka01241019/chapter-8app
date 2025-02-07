@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { useParams } from "next/navigation"; //next/navigationからuseParamsをインポートする
-import { ArticlesCardDetail } from "..//../_components/ArticlesCardDetail";
+import { ArticlesCardDetail } from "./_components/ArticlesCardDetail";
 import { Post } from "..//../_types/Post";
 
 const PageDetail: React.FC = () => {

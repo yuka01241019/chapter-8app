@@ -1,6 +1,6 @@
-"use client"; 
+"use client";
 
-import { Post } from "../_types/Post";
+import { Post } from "../../../_types/Post";
 
 type ArticlesCardDetailProps = {
   post: Post;
@@ -36,4 +36,3 @@ export const ArticlesCardDetail: React.FC<ArticlesCardDetailProps> = ({
     </div>
   );
 };
-
