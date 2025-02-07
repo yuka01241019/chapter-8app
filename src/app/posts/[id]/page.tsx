@@ -2,13 +2,12 @@
 
 import React, { useEffect, useState } from "react";
 import { useParams } from "next/navigation"; //next/navigationからuseParamsをインポートする
-import  ArticlesCardDetail from "..//../_components/ArticlesCardDetail";
+import { ArticlesCardDetail } from "..//../_components/ArticlesCardDetail";
 import { Post } from "..//../_types/Post";
-
 
 const PageDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>(); //useRouterを使用してURLパラメータを取得する
-  const [post, setPost] = useState<Post | null>(null); 
+  const [post, setPost] = useState<Post | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   useEffect(() => {
     const fetchPageDetail = async () => {

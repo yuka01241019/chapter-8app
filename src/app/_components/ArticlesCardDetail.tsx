@@ -7,7 +7,7 @@ type ArticlesCardDetailProps = {
   className?: string; //classNameは省略可能に設定
 };
 
-const ArticlesCardDetail: React.FC<ArticlesCardDetailProps> = ({
+export const ArticlesCardDetail: React.FC<ArticlesCardDetailProps> = ({
   post,
   className,
 }) => {
@@ -36,4 +36,4 @@ const ArticlesCardDetail: React.FC<ArticlesCardDetailProps> = ({
     </div>
   );
 };
-export default ArticlesCardDetail;
+
