@@ -3,20 +3,28 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "next/navigation"; //next/navigationからuseParamsをインポートする
 import { ArticlesCardDetail } from "./_components/ArticlesCardDetail";
-import { Post } from "..//../_types/Post";
+import { MicroCmsPost } from "..//../_types/Post";
+import Image from "next/image"; //Imageコンポーネントをインポート
 
 const PageDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>(); //useRouterを使用してURLパラメータを取得する
-  const [post, setPost] = useState<Post | null>(null);
+  const [post, setPost] = useState<MicroCmsPost | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   useEffect(() => {
     const fetchPageDetail = async () => {
+      setIsLoading(true);
       const res = await fetch(
-        `https://1hmfpsvto6.execute-api.ap-northeast-1.amazonaws.com/dev/posts/${id}`
+        `https://t0ga7qjyqq.microcms.io/api/v1/posts/${id}`,
+        {
+          headers: {
+            "X-MICROCMS-API-KEY": process.env
+              .NEXT_PUBLIC_MICROCMS_API_KEY as string,
+          },
+        }
       );
-      const data: { post: Post } = await res.json();
+      const data = await res.json();
       console.log(data);
-      setPost(data.post);
+      setPost(data);
       setIsLoading(false);
     };
     fetchPageDetail();
@@ -32,7 +40,13 @@ const PageDetail: React.FC = () => {
   return (
     <div>
       <div className="flex items-center justify-center">
-        <img alt={post.title} className="mt-12" src={post.thumbnailUrl} />
+        <Image //<img>タグをnext/imageのImageコンポーネントに置き換え修正
+          alt={post.title}
+          className="mt-12"
+          src={post.thumbnail.url}
+          height={post.thumbnail.height} //高さを設定
+          width={post.thumbnail.width} //幅を設定
+        />
       </div>
       <ArticlesCardDetail post={post} className="border-none" />
     </div>
