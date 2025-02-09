@@ -2,25 +2,28 @@
 
 import { useEffect, useState } from "react";
 import { ArticlesCard } from "./_components/ArticlesCard";
-import { Post } from "./_types/Post";
+import { MicroCmsPost } from "./_types/Post";
 
-type ApiResponse = {
-  message: string;
-  posts: Post[];
-};
+// type ApiResponse = {
+//   message: string;
+//   posts: MicroCmsPost[];
+// };
 
 const Posts: React.FC = () => {
-  const [posts, setPosts] = useState<Post[]>([]); // postsの型を指定
+  const [posts, setPosts] = useState<MicroCmsPost[]>([]); // postsの型を指定
   const [isLoading, setIsLoading] = useState<boolean>(true); // isLoadingの型を指定
   // API呼び出しを行う関数
   useEffect(() => {
     const getApi = async () => {
-      const res = await fetch(
-        "https://1hmfpsvto6.execute-api.ap-northeast-1.amazonaws.com/dev/posts"
-      );
-      const data: ApiResponse = await res.json(); // レスポンスの型を指定
-      console.log(data);
-      setPosts(data.posts);
+      const res = await fetch("https://t0ga7qjyqq.microcms.io/api/v1/posts", {
+        headers: {
+          "X-MICROCMS-API-KEY": process.env
+            .NEXT_PUBLIC_MICROCMS_API_KEY as string,
+        },
+      });
+      const { contents } = await res.json();
+      console.log(contents);
+      setPosts(contents);
       setIsLoading(false);
     };
     getApi();

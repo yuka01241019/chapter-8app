@@ -1,9 +1,9 @@
 "use client";
 
-import { Post } from "../../../_types/Post";
+import { MicroCmsPost } from "../../../_types/Post";
 
 type ArticlesCardDetailProps = {
-  post: Post;
+  post: MicroCmsPost;
   className?: string; //classNameは省略可能に設定
 };
 
@@ -19,12 +19,12 @@ export const ArticlesCardDetail: React.FC<ArticlesCardDetailProps> = ({
     >
       <div className="text-sm float-left">{date}</div>
       <div className="float-right">
-        {post.categories.map((category, index) => (
+        {post.categories.map((category) => (
           <button
-            key={index}
+            key={category.id}//正しく要素を識別できるように修正→indexは不要
             className="px-2 py-0 mx-1 text-blue-500 border border-blue-500  rounded"
           >
-            {category}
+            {category.name}
           </button>
         ))}
       </div>

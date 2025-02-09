@@ -1,8 +1,8 @@
-export type Post = {
-  id: number;
+export type MicroCmsPost = {
+  id: string;
   title: string;
-  thumbnailUrl: string;
+  thumbnail: { url: string; height: number; width: number };
   createdAt: string;
-  categories: string[];
+  categories: { id: string; name: string }[];
   content: string;
 };

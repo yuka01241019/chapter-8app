@@ -1,10 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import { Post } from "../_types/Post";
+import { MicroCmsPost } from "../_types/Post";
 
 type ArticlesCardProps = {
-  post: Post;
+  post: MicroCmsPost;
 };
 
 export const ArticlesCard: React.FC<ArticlesCardProps> = ({ post }) => {
@@ -12,16 +12,16 @@ export const ArticlesCard: React.FC<ArticlesCardProps> = ({ post }) => {
   return (
     <Link
       href={`/posts/${post.id}`}
-      className={`block border border-gray-400 my-8 mx-auto py-4 pl-6 pr-20 w-[800px] max-w-[800px]`}//border-noneは不必要なので削除
+      className={`block border border-gray-400 my-8 mx-auto py-4 pl-6 pr-20 w-[800px] max-w-[800px]`} //border-noneは不必要なので削除
     >
       <div className="text-sm float-left">{date}</div>
       <div className="float-right">
-        {post.categories.map((category, index) => (
+        {post.categories.map((category) => (
           <button
-            key={index}
+            key={category.id} //正しく要素を識別できるように修正→indexは不要
             className="px-2 py-0 mx-1 text-blue-500 border border-blue-500  rounded"
           >
-            {category}
+            {category.name}
           </button>
         ))}
       </div>
