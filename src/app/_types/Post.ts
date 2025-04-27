@@ -1,8 +1,21 @@
-export type MicroCmsPost = {
-  id: string;
+//サーバーからとってくるとき用
+export type Post = {
+  id: number;
   title: string;
-  thumbnail: { url: string; height: number; width: number };
-  createdAt: string;
-  categories: { id: string; name: string }[];
   content: string;
+  thumbnailUrl:string;
+  createdAt: string;
+  updatedAt:string;
+  categories: { id: number; name: string }[];
 };
+
+//新規投稿で使うとき用
+export type CreatePost={
+  id: number;
+  title: string;
+  content: string;
+  thumbnailUrl:string;
+  createdAt: string;
+  updatedAt:string;
+  categories: { id: number }[];
+}
