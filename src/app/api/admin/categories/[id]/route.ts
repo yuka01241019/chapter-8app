@@ -4,7 +4,7 @@ import { request } from "http";
 
 const prisma = new PrismaClient();
 
-//管理者カテゴリー個別取得API
+//管理者　カテゴリー個別取得API
 export const GET = async (
   request: NextRequest,
   { params }: { params: { id: string } }
@@ -21,11 +21,11 @@ export const GET = async (
   }
 };
 
-//管理者カテゴリー更新API
+// カテゴリーの更新時に送られてくるリクエストのbodyの型
 interface UpdateCategoryRequestBody {
   name: string;
 }
-
+//管理者　カテゴリー更新API
 export const PUT = async (
   request: NextRequest,
   { params }: { params: { id: string } }
@@ -48,7 +48,7 @@ export const PUT = async (
   }
 };
 
-//管理者カテゴリー削除API
+//管理者　カテゴリー削除API
 export const DELETE = async (
   request: NextRequest,
   { params }: { params: { id: string } }

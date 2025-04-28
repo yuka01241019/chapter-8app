@@ -2,7 +2,7 @@ import { PrismaClient } from '@prisma/client'
 import { NextRequest, NextResponse } from 'next/server'
 
 const prisma = new PrismaClient()
-
+//管理者　カテゴリー一覧取得API
 export const GET = async (request: NextRequest) => {
   try {
     // カテゴリーの一覧をDBから取得
@@ -25,7 +25,7 @@ export const GET = async (request: NextRequest) => {
 interface CreateCategoryRequestBody {
   name: string
 }
-
+//管理者　カテゴリー新規作成API
 export const POST = async (request: Request, context: any) => {
   try {
     // リクエストのbodyを取得
