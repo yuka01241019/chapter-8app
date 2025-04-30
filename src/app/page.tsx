@@ -16,9 +16,14 @@ const Posts: React.FC = () => {
   useEffect(() => {
     const getApi = async () => {
       const res = await fetch("/api/admin/posts"); //自作APを呼び出す
-      const { posts } = await res.json(); //postsの配列を取り出す
+      const data = await res.json();
       console.log(posts);
-      setPosts(posts);
+      //postCategoriesからcategoryを抽出
+      const transformedPosts = data.posts.map((post: any) => ({
+        ...post,
+        categories: post.postCategories.map((pc: any) => pc.category),
+      }));
+      setPosts(transformedPosts);
       setIsLoading(false);
     };
     getApi();
