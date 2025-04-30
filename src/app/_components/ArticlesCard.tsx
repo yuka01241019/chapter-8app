@@ -1,10 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import { MicroCmsPost } from "../_types/Post";
+import { Post } from "../_types/Post";
 
 type ArticlesCardProps = {
-  post: MicroCmsPost;
+  post: Post;
 };
 
 export const ArticlesCard: React.FC<ArticlesCardProps> = ({ post }) => {
