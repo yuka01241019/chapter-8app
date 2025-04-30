@@ -13,8 +13,7 @@ const PostForm: React.FC = () => {
   const [content, setContent] = useState<string>(""); //本文を管理
   const [thumbnailUrl, setThumbnailUrl] = useState(""); //サムネイルを管理
   const [categories, setCategories] = useState<Category[]>([]); //カテゴリー一覧を管理(配列)
-  const [selectedCategory, setSelectedCategory] = useState<number | null>(null); //選んだカテゴリー
-
+  const [selectedCategories, setSelectedCategories] = useState<number[]>([]); //選択状態を保持
   //★カテゴリー一覧をAPIから取得★
   useEffect(() => {
     const fetchCategories = async () => {
@@ -33,7 +32,7 @@ const PostForm: React.FC = () => {
     //フォームが送信された時に動く関数
     e.preventDefault(); //フォーム送信時のリロードを防ぐ役割
     try {
-      if (selectedCategory === null) {
+      if (setSelectedCategories.length === 0) {
         alert("カテゴリーを選択してください。");
         return;
       }
@@ -41,7 +40,7 @@ const PostForm: React.FC = () => {
         title,
         content,
         thumbnailUrl,
-        categories: [{ id: selectedCategory }], //投稿するときは配列で渡す
+        categories: selectedCategories.map((id) => ({ id })), //複数対応
       });
       alert("投稿に成功しました。");
 
@@ -49,7 +48,7 @@ const PostForm: React.FC = () => {
       setTitle("");
       setContent("");
       setThumbnailUrl("");
-      setSelectedCategory(null);
+      setSelectedCategories([]); //複数の選択を初期化する
     } catch (error) {
       //エラーの場合
       console.log(error); //エラーの内容をコンソールに表紙
@@ -84,13 +83,17 @@ const PostForm: React.FC = () => {
 
       <label>カテゴリー</label>
       <select
-        value={selectedCategory !== null ? String(selectedCategory) : ""}
+        multiple //複数選択できるように
+        value={selectedCategories.map(String)}
         onChange={(e) => {
-          setSelectedCategory(Number(e.target.value));
+          const selected = Array.from(e.target.selectedOptions, (option) =>
+            Number(option.value)
+          );
+          setSelectedCategories(selected);
         }}
         className="border border-stone-300 rounded-lg p-3 w-full"
       >
-        <option value=""></option>
+        {/* <option value=""></option> */}
 
         {categories.map((category) => {
           //カテゴリー一覧データを元に選択肢を自動で作成
