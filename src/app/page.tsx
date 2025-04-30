@@ -15,7 +15,7 @@ const Posts: React.FC = () => {
   // API呼び出しを行う関数
   useEffect(() => {
     const getApi = async () => {
-      const res = await fetch("/api/admin/posts"); //自作APを呼び出す
+      const res = await fetch("/api/posts"); //自作APを呼び出す
       const data = await res.json();
       console.log(posts);
       //postCategoriesからcategoryを抽出
