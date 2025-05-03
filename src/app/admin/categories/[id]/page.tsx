@@ -10,6 +10,7 @@ const EditCategoryPage: React.FC = () => {
   const { id } = useParams(); //ルートのIDを取得
   const router = useRouter();
   const [name, setName] = useState(""); //初期値は空
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     const fetchCategory = async () => {
@@ -22,11 +23,13 @@ const EditCategoryPage: React.FC = () => {
 
   //編集処理(PUT)
   const handleUpdate = async (name: string) => {
+    setIsLoading(true); //開始時にtrue
     const res = await fetch(`/api/admin/categories/${id}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" }, //json形式で送る
       body: JSON.stringify({ name }),
     });
+    setIsLoading(false); //完了後にfalse
     if (res.ok) {
       alert("カテゴリーを更新しました");
       router.push("/admin/categories"); //指定したURL（ここではカテゴリー一覧）に画面遷移するための関数
@@ -38,9 +41,11 @@ const EditCategoryPage: React.FC = () => {
   const handleDelete = async () => {
     const ok = confirm("本当に削除しますか？"); //ユーザーに確認ポップアップを出す
     if (!ok) return; //OKじゃなかったら（キャンセルされたら＝falseされたら）そこで関数の処理を終了する（何もしない）
+    setIsLoading(true);
     const res = await fetch(`/api/admin/categories/${id}`, {
       method: "DELETE",
     });
+    setIsLoading(false);
     if (res.ok) {
       alert("カテゴリーを削除しました");
       router.push("/admin/categories"); //新しいURLを履歴に追加してページ遷移する(前のページに戻れる)
@@ -56,6 +61,7 @@ const EditCategoryPage: React.FC = () => {
         onDelete={handleDelete}
         defaultValue={name}
         submitLabel="更新"
+        disabled={isLoading}
       />
     </div>
   );
