@@ -3,9 +3,10 @@
 import { useParams } from "next/navigation";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { CategoryForm } from "../../posts/_components/CategoryForm";
 
 //カテゴリー編集(更新、削除)ページ
-const EditCategoryPage: React.FC  = () => {
+const EditCategoryPage: React.FC = () => {
   const { id } = useParams(); //ルートのIDを取得
   const router = useRouter();
   const [name, setName] = useState(""); //初期値は空
@@ -20,8 +21,7 @@ const EditCategoryPage: React.FC  = () => {
   }, [id]);
 
   //編集処理(PUT)
-  const handleUpdate = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleUpdate = async (name: string) => {
     const res = await fetch(`/api/admin/categories/${id}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" }, //json形式で送る
@@ -49,31 +49,15 @@ const EditCategoryPage: React.FC  = () => {
     }
   };
   return (
-    <form onSubmit={handleUpdate} className="space-y-4 p-4">
+    <div className="space-y-4 p-4">
       <h1 className="text-lg font-bold mb-4">カテゴリー編集</h1>
-      <label>カテゴリー名</label>
-      <input
-        type="text"
-        value={name}
-        onChange={(e) => setName(e.target.value)}
-        className="border border-stone-300 rounded-lg p-3 w-full"
-      ></input>
-      <div className="flex gap-4">
-        <button
-          type="submit"
-          className="py-2 px-4 border block rounded-lg  text-white bg-blue-700"
-        >
-          更新
-        </button>
-        <button
-          type="button"
-          onClick={handleDelete}
-          className="py-2 px-4 border block rounded-lg  text-white bg-red-600"
-        >
-          削除
-        </button>
-      </div>
-    </form>
+      <CategoryForm
+        onSubmit={handleUpdate}
+        onDelete={handleDelete}
+        defaultValue={name}
+        submitLabel="更新"
+      />
+    </div>
   );
 };
 
