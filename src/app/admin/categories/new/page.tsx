@@ -2,8 +2,8 @@
 
 import { CategoryForm } from "../../posts/_components/CategoryForm";
 
-const createCategories = () => {
+const CreateCategories: React.FC  = () => {
   return <CategoryForm />;
 };
 
-export default createCategories;
+export default CreateCategories;

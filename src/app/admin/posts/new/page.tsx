@@ -1,7 +1,7 @@
 "use client";
 
 import { CreatePost } from "@/app/_types/Post";
-import PostForm from "../_components/PostForm";
+import { PostForm } from "../_components/PostForm";
 
 // 管理者_記事の新規作成リクエスト。データをバックエンドのAPIに送信するための関数。役割→「投稿すること」だけ
 export const createPost = async (postData: CreatePost) => {
@@ -19,7 +19,7 @@ export const createPost = async (postData: CreatePost) => {
     const data: CreatePost = await res.json(); //レスポンスの JSON を JavaScript オブジェクトに変換
     return data; //作成されたデータを返す
   } catch (error) {
-    console.error("投稿エラー",error); //エラー内容をコンソールに出力
+    console.error("投稿エラー", error); //エラー内容をコンソールに出力
   }
 };
 
@@ -28,4 +28,4 @@ const NewPostPage = () => {
   return <PostForm />;
 };
 
-export default NewPostPage;  // ページコンポーネントをdefault export
+export default NewPostPage; 

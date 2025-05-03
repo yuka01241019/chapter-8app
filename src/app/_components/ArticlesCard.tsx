@@ -16,12 +16,12 @@ export const ArticlesCard: React.FC<ArticlesCardProps> = ({ post }) => {
     >
       <div className="text-sm float-left">{date}</div>
       <div className="float-right">
-        {post.categories.map((category) => (
+        {post.postCategories.map((postCategory) => (
           <button
-            key={category.id} //正しく要素を識別できるように修正→indexは不要
+            key={postCategory.category.id} //正しく要素を識別できるように修正→indexは不要
             className="px-2 py-0 mx-1 text-blue-500 border border-blue-500  rounded"
           >
-            {category.name}
+            {postCategory.category.name}
           </button>
         ))}
       </div>

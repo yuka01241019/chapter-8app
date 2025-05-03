@@ -18,7 +18,7 @@ type Post = {
 };
 
 //記事一覧ページ
-const adminPostsPage = () => {
+const AdminPostsPage: React.FC = () => {
   const [posts, setPosts] = useState<Post[]>();
   useEffect(() => {
     const fetchPosts = async () => {
@@ -35,26 +35,37 @@ const adminPostsPage = () => {
 
   return (
     <div className="space-y-4 p-4">
-    <div className="flex justify-between items-center mb-9 mt-2">
-      <h1 className="text-lg font-bold mb-9 mt-2">記事一覧</h1> 
+      <div className="flex justify-between items-center mb-9 mt-2">
+        <h1 className="text-lg font-bold mb-9 mt-2">記事一覧</h1>
 
-      <Link
-        href="/admin/posts/new"
-        className="py-2 px-4 border  rounded-lg  text-white bg-blue-700"
-      >
-        新規作成
-      </Link>
+        <Link
+          href="/admin/posts/new"
+          className="py-2 px-4 border  rounded-lg  text-white bg-blue-700"
+        >
+          新規作成
+        </Link>
       </div>
       <div>
-        {posts?.map((post) => (
-          <div key={post.id} className="border-b border-gray-300 py-4">
-            <h2 className="font-black">{post.title}</h2>
-            <p className="text-gray-500">{new Date(post.createdAt).toLocaleDateString()}</p>
-          </div>
-        ))}
+        {/* 記事が1件以上ある場合の表示 */}
+        {posts?.length ? (
+          posts?.map((post) => (
+            //各記事を順に表示
+            <div key={post.id} className="border-b border-gray-300 py-4">
+              <Link href={`/admin/posts/${post.id}`}>
+                <h2 className="font-black">{post.title}</h2>
+              </Link>
+              <p className="text-gray-500">
+                {new Date(post.createdAt).toLocaleDateString()}
+              </p>
+            </div>
+          ))
+        ) : (
+          //記事がない場合の表示
+          <p>記事がありません。</p>
+        )}
       </div>
     </div>
   );
 };
 
-export default adminPostsPage;
+export default AdminPostsPage;

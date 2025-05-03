@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 //カテゴリー編集(更新、削除)ページ
-const EditCategoryPage = () => {
+const EditCategoryPage: React.FC  = () => {
   const { id } = useParams(); //ルートのIDを取得
   const router = useRouter();
   const [name, setName] = useState(""); //初期値は空

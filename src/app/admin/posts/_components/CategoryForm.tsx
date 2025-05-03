@@ -3,7 +3,7 @@
 import { useState } from "react";
 
 //カテゴリー新規作成コンポーネント
-export const CategoryForm = () => {
+export const CategoryForm: React.FC = () => {
   const [name, setName] = useState("");
   const handleSubmit = async (e: React.FormEvent) => {
     //フォームが送信された時に動く関数

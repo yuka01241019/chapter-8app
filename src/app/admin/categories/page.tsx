@@ -28,7 +28,7 @@ const AdminCategoriesPage: React.FC = () => {
       <div className="flex justify-between items-center mb-9 mt-2">
         <h1 className="text-lg font-bold mb-9 mt-2">カテゴリー一覧</h1>
         <Link
-          href="/api/admin/categories/new"
+          href="/admin/categories/new"
           className="py-2 px-4 border  rounded-lg  text-white bg-blue-700"
         >
           新規作成
@@ -39,9 +39,11 @@ const AdminCategoriesPage: React.FC = () => {
         {categories?.length ? (
           categories.map((category) => (
             //各カテゴリーを順に表示
-            <div key={category.id} className="border-b border-gray-300 py-4">
-              <h2 className="font-black">{category.name}</h2>
-            </div>
+            <Link href={`/admin/categories/${category.id}`}>
+              <div key={category.id} className="border-b border-gray-300 py-4">
+                <h2 className="font-black">{category.name}</h2>
+              </div>
+            </Link>
           ))
         ) : (
           //カテゴリーがない場合の表示
