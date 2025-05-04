@@ -2,6 +2,7 @@
 
 import { CreatePost } from "@/app/_types/Post";
 import { PostForm } from "../_components/PostForm";
+import { useState } from "react";
 
 // 管理者_記事の新規作成リクエスト。データをバックエンドのAPIに送信するための関数。役割→「投稿すること」だけ
 export const createPost = async (postData: CreatePost) => {
@@ -25,7 +26,25 @@ export const createPost = async (postData: CreatePost) => {
 
 // // NewPostPage関数でPostFormコンポーネントだけを返す
 const NewPostPage = () => {
-  return <PostForm />;
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const handleSubmit=async(data:CreatePost)=>{
+  setIsSubmitting(true);
+  try{
+  await createPost(data);
+  alert("投稿に成功しました");
+  }finally{
+  setIsSubmitting(false);}
+  }
+  return (
+    <div className="space-y-4 p-4">
+      <h1 className="text-lg font-bold mb-9 mt-2">記事作成</h1>
+      <PostForm
+        submitLabel="作成"
+        onSubmit={handleSubmit}
+        disabled={isSubmitting}
+      />
+    </div>
+  );
 };
 
-export default NewPostPage; 
+export default NewPostPage;
