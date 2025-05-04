@@ -23,7 +23,7 @@ type PostFormProps = {
   };
   submitLabel: string;
   showDeleteButton?: boolean;
-  disabled?:boolean;
+  disabled?: boolean;
 };
 
 //記事新規作成、編集　共通コンポーネント
@@ -84,7 +84,13 @@ export const PostForm: React.FC<PostFormProps> = ({
       setIsSubmitting(false); //終了後に解除
     }
   };
-
+  //カテゴリー選択変更時の処理
+  const handleChangeCategory = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const selected = Array.from(e.target.selectedOptions, (option) =>
+      Number(option.value)
+    );
+    setSelectedCategories(selected);
+  };
   return (
     <form onSubmit={handleSubmit}>
       <label>タイトル</label>
@@ -117,12 +123,7 @@ export const PostForm: React.FC<PostFormProps> = ({
       <select
         multiple //複数選択できるように
         value={selectedCategories.map(String)}
-        onChange={(e) => {
-          const selected = Array.from(e.target.selectedOptions, (option) =>
-            Number(option.value)
-          );
-          setSelectedCategories(selected);
-        }}
+        onChange={handleChangeCategory}
         className="border border-stone-300 rounded-lg p-3 w-full mb-4"
         disabled={isSubmitting}
       >
