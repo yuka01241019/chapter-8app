@@ -19,7 +19,7 @@ type Post = {
 
 //記事一覧ページ
 const AdminPostsPage: React.FC = () => {
-  const [posts, setPosts] = useState<Post[]>();
+  const [posts, setPosts] = useState<Post[]>([]); //初期値は空配列に
   useEffect(() => {
     const fetchPosts = async () => {
       try {
@@ -47,8 +47,8 @@ const AdminPostsPage: React.FC = () => {
       </div>
       <div>
         {/* 記事が1件以上ある場合の表示 */}
-        {posts?.length ? (
-          posts?.map((post) => (
+        {posts.length ? (
+          posts.map((post) => (
             //各記事を順に表示
             <div key={post.id} className="border-b border-gray-300 py-4">
               <Link href={`/admin/posts/${post.id}`}>
