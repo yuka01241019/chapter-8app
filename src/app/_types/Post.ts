@@ -1,8 +1,20 @@
-export type MicroCmsPost = {
-  id: string;
+import { Category } from "@prisma/client";
+
+//サーバーからとってくるとき（取得用）
+export type Post = {
+  id: number;
   title: string;
-  thumbnail: { url: string; height: number; width: number };
-  createdAt: string;
-  categories: { id: string; name: string }[];
   content: string;
+  thumbnailUrl: string;
+  createdAt: string;
+  updatedAt: string;
+  postCategories: { category: { id: number; name: string } }[];
+};
+
+//新規投稿で使うとき（送信用）
+export type CreatePost = {
+  title: string;
+  content: string;
+  thumbnailUrl: string;
+  categories: { id: number }[];
 };

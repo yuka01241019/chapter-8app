@@ -3,32 +3,29 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "next/navigation"; //next/navigationからuseParamsをインポートする
 import { ArticlesCardDetail } from "./_components/ArticlesCardDetail";
-import { MicroCmsPost } from "..//../_types/Post";
+import { Post } from "..//../_types/Post";
 import Image from "next/image"; //Imageコンポーネントをインポート
 
 const PageDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>(); //useRouterを使用してURLパラメータを取得する
-  const [post, setPost] = useState<MicroCmsPost | null>(null);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [post, setPost] = useState<Post | null>(null); //postの状態管理
+  const [isLoading, setIsLoading] = useState<boolean>(true); //ローディング状態
   useEffect(() => {
     const fetchPageDetail = async () => {
-      setIsLoading(true);
-      const res = await fetch(
-        `https://t0ga7qjyqq.microcms.io/api/v1/posts/${id}`,
-        {
-          headers: {
-            "X-MICROCMS-API-KEY": process.env
-              .NEXT_PUBLIC_MICROCMS_API_KEY as string,
-          },
-        }
-      );
-      const data = await res.json();
-      console.log(data);
-      setPost(data);
-      setIsLoading(false);
+      setIsLoading(true); //ローディング開始
+      try {
+        const res = await fetch(`/api/posts/${id}`); //APIから記事データを取得
+        const data = await res.json();
+        console.log("確認",data);
+        setPost(data.post); //取得したデータをセット
+      } catch (error) {
+        console.error("記事取得エラー", error);
+      } finally {
+        setIsLoading(false); //ローディング終了
+      }
     };
     fetchPageDetail();
-  }, [id]);
+  }, [id]); //IDが変わるたびに再実行
   //ローディング中の処理
   if (isLoading) {
     return <div>読み込み中…</div>;
@@ -43,9 +40,9 @@ const PageDetail: React.FC = () => {
         <Image //<img>タグをnext/imageのImageコンポーネントに置き換え修正
           alt={post.title}
           className="mt-12"
-          src={post.thumbnail.url}
-          height={post.thumbnail.height} //高さを設定
-          width={post.thumbnail.width} //幅を設定
+          src={post.thumbnailUrl}
+          height={400}
+          width={800}
         />
       </div>
       <ArticlesCardDetail post={post} className="border-none" />
