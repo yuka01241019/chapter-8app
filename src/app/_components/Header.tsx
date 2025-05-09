@@ -1,8 +1,9 @@
 "use client"; //クライアントサイドで実行
 
 import Link from "next/link";
-import { useSupabaseSession } from "../hooks/useSupabaseSession";
-import { supabase } from "../utils/supabase";
+import React from "react";
+import { useSupabaseSession } from "../_hooks/useSupabaseSession";
+import { supabase } from "@/utils/supabase";
 
 export const Header: React.FC = () => {
   const handleLogout = async () => {
@@ -20,8 +21,8 @@ export const Header: React.FC = () => {
         <div className="flex items-center gap-4">
           {session ? (
             <>
-              <Link href="/admin" className="">
-                お問い合わせ
+              <Link href="/admin/posts" className="">
+                管理画面
               </Link>
               <button onClick={handleLogout}>ログアウト</button>
             </>

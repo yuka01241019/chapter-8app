@@ -4,6 +4,7 @@ import { useParams } from "next/navigation";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { PostForm } from "../_components/PostForm";
+import { useSupabaseSession } from "@/app/_hooks/useSupabaseSession";
 
 type Category = {
   id: number;
@@ -30,6 +31,7 @@ const EditPostPage = () => {
     selectedCategoryId: number[];
   }>();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const { token } = useSupabaseSession();
   // const [title, setTitle] = useState<string>(""); //titleを管理
   // const [content, setContent] = useState<string>(""); //本文を管理
   // const [thumbnailUrl, setThumbnailUrl] = useState(""); //サムネイルを管理
@@ -37,8 +39,14 @@ const EditPostPage = () => {
   // const [allCategories, setAllCategories] = useState<Category[]>([]); //カテゴリー一覧全部の情報を保持する役割（UI上にボタン表示するための用途）
 
   useEffect(() => {
+    if (!token) return;
     const fetchPost = async () => {
-      const res = await fetch(`/api//admin/posts/${id}`);
+      const res = await fetch(`/api/admin/posts/${id}`, {
+        headers: {
+          // "Content-Type": "application/json", 「POST」や「PUT」メソッドではない時は不要！＝メソッドを指定していない場合は「GET」→いらない
+          Authorization: `Bearer${token}`, //このトークンを持っている人は認証済みとみなす
+        },
+      });
       const data = await res.json();
       const post: Post = data.post;
 
@@ -53,7 +61,7 @@ const EditPostPage = () => {
     if (id) {
       fetchPost();
     }
-  }, [id]);
+  }, [id,token]); //tokenを追加しtokenがセットされた後にも再実行される
   //編集処理(PUT)
   const handleSubmit = async (data: {
     title: string;
@@ -61,11 +69,15 @@ const EditPostPage = () => {
     thumbnailUrl: string;
     categories: { id: number }[];
   }) => {
+    if (!token) return;
     setIsSubmitting(true);
     try {
       const res = await fetch(`/api/admin/posts/${id}`, {
         method: "PUT",
-        headers: { "content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
         body: JSON.stringify(data),
       });
 
@@ -82,12 +94,17 @@ const EditPostPage = () => {
 
   //削除処理(DELETE)
   const handleDelete = async () => {
+    if (!token) return;
     const ok = confirm("本当に削除しますか？"); //ユーザーに確認ポップアップを出す
     if (!ok) return; //OKじゃなかったら（キャンセルされたら＝falseされたら）そこで関数の処理を終了する（何もしない）
     setIsSubmitting(true);
     try {
       const res = await fetch(`/api/admin/posts/${id}`, {
         method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
       });
       if (res.ok) {
         alert("削除しました！");

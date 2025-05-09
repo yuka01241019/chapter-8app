@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { Session } from '@supabase/supabase-js'
-import { supabase } from "../utils/supabase";
+import { Session } from "@supabase/supabase-js";
+import { supabase } from "@/utils/supabase";
 
 export const useSupabaseSession = () => {
   //undefined: ログイン状態ロード中, null: ログインしていない, Session: ログインしている
@@ -14,6 +14,7 @@ export const useSupabaseSession = () => {
         data: { session },
         //現在ログイン中かどうかのチェック
       } = await supabase.auth.getSession();
+      console.log("getSession result", session);
       setSession(session);
       setToken(session?.access_token || null);
       setIsLoading(false);

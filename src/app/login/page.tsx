@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { supabase } from "../utils/supabase";
+import { supabase } from "@/utils/supabase";
 
 //Supabaseを使ったログインページ
 const Page = () => {

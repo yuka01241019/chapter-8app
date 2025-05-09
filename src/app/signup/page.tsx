@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { supabase } from "../utils/supabase";
+import { supabase } from "@/utils/supabase";
 
 //Supabaseを使った新規ユーザー登録ページ
 const Page = () => {
@@ -10,7 +10,7 @@ const Page = () => {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    
+
     const { error } = await supabase.auth.signUp({
       email,
       password,
@@ -20,7 +20,8 @@ const Page = () => {
     });
     if (error) {
       alert("登録に失敗しました");
-    } else { //成功時は入力欄をリセットしてメッセージ送信
+    } else {
+      //成功時は入力欄をリセットしてメッセージ送信
       setEmail("");
       setPassword("");
       alert("確認メールを送信しました");
