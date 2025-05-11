@@ -3,6 +3,7 @@
 import { supabase } from "@/utils/supabase";
 import { v4 as uuidv4 } from "uuid"; // 固有IDを生成するライブラリ
 import { ChangeEvent, useEffect, useState } from "react";
+import Image from "next/image";
 
 type Category = {
   id: number;
@@ -14,14 +15,14 @@ type PostFormProps = {
   onSubmit: (data: {
     title: string;
     content: string;
-    thumbnailUrl: string;
+    thumbnailImageKey: string;
     categories: { id: number }[];
   }) => Promise<void>;
   onDelete?: () => Promise<void>; //削除機能が必要な場合だけ渡す
   initialData?: {
     title: string;
     content: string;
-    thumbnailUrl: string;
+    thumbnailImageKey: string;
     selectedCategoryId: number[];
   };
   submitLabel: string;
@@ -52,7 +53,7 @@ export const PostForm: React.FC<PostFormProps> = ({
     if (initialData) {
       setTitle(initialData.title);
       setContent(initialData.content);
-      setThumbnailImageKey(initialData.thumbnailUrl);
+      setThumbnailImageKey(initialData.thumbnailImageKey);
       setSelectedCategories(initialData.selectedCategoryId);
     }
   }, [initialData]);
@@ -99,7 +100,7 @@ export const PostForm: React.FC<PostFormProps> = ({
       await onSubmit({
         title,
         content,
-        thumbnailUrl: thumbnailImageKey,
+        thumbnailImageKey: thumbnailImageKey,
         categories: selectedCategories.map((id) => ({ id })),
       });
     } finally {
@@ -174,7 +175,13 @@ export const PostForm: React.FC<PostFormProps> = ({
         className="mb-4"
       ></input>
       {thumbnailImageUrl && (
-        <img src={thumbnailImageUrl} alt="サムネイル" className="mb-4" />
+        <Image
+          src={thumbnailImageUrl}
+          alt="サムネイル"
+          className="mb-4"
+          width={256}
+          height={160}
+        />
       )}
 
       <label htmlFor="category" className="block">

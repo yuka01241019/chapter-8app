@@ -17,6 +17,7 @@ const Posts: React.FC = () => {
     const getApi = async () => {
       const res = await fetch("/api/posts"); //自作APを呼び出す
       const data = await res.json();
+      console.log("data",data);
       console.log(posts);
       //postCategoriesからcategoryを抽出
       const transformedPosts = data.posts.map((post: any) => ({

@@ -8,7 +8,7 @@ import { useSupabaseSession } from "@/app/_hooks/useSupabaseSession";
 // 管理者_記事の新規作成リクエスト。データをバックエンドのAPIに送信するための関数。役割→「投稿すること」だけ
 export const createPost = async (postData: CreatePost, token: string) => {
   try {
-    const { title, content, thumbnailUrl, categories } = postData; //必要なプロパティだけ取り出す
+    const { title, content, thumbnailImageKey, categories } = postData; //必要なプロパティだけ取り出す
     const res = await fetch("/api/admin/posts", {
       // 第2引数はHTTPリクエストを送信するための関数
       method: "POST",
@@ -16,7 +16,7 @@ export const createPost = async (postData: CreatePost, token: string) => {
         "Content-Type": "application/json",
         Authorization: token,
       },
-      body: JSON.stringify({ title, content, thumbnailUrl, categories }), //必要なデータだけ送る
+      body: JSON.stringify({ title, content, thumbnailImageKey, categories }), //必要なデータだけ送る
     });
     if (!res.ok) {
       throw new Error("投稿に失敗しました");

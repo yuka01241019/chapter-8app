@@ -14,7 +14,7 @@ type Category = {
 type Post = {
   title: string;
   content: string;
-  thumbnailUrl: string;
+  thumbnailImageKey: string;
   postCategories: {
     category: Category;
   }[];
@@ -27,7 +27,7 @@ const EditPostPage = () => {
   const [initialData, setInitialData] = useState<{
     title: string;
     content: string;
-    thumbnailUrl: string;
+    thumbnailImageKey: string;
     selectedCategoryId: number[];
   }>();
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -53,7 +53,7 @@ const EditPostPage = () => {
       setInitialData({
         title: post.title,
         content: post.content,
-        thumbnailUrl: post.thumbnailUrl,
+        thumbnailImageKey: post.thumbnailImageKey,
         selectedCategoryId: post.postCategories.map((pc) => pc.category.id),
       });
     };
@@ -66,7 +66,7 @@ const EditPostPage = () => {
   const handleSubmit = async (data: {
     title: string;
     content: string;
-    thumbnailUrl: string;
+    thumbnailImageKey: string;
     categories: { id: number }[];
   }) => {
     if (!token) return;
