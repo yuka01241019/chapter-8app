@@ -49,13 +49,23 @@ interface CreatePostRequestBody {
 // POSTという命名にすることで、POSTリクエストの時にこの関数が呼ばれる
 //管理者　記事新規作成API
 export const POST = async (request: NextRequest, context: any) => {
+  //token認証処理
+  const token = request.headers.get("Authorization") ?? "";
+  const { error } = await supabase.auth.getUser(token);
+  if (error)
+    return NextResponse.json({ stats: error.message }, { status: 400 });
+    //tokenが正しい場合、以降が実行される
   try {
     // リクエストのbodyを取得
     const body = await request.json();
 
     // bodyの中からtitle, content, categories, thumbnailUrlを取り出す
-    const { title, content, categories, thumbnailImageKey }: CreatePostRequestBody =
-      body;
+    const {
+      title,
+      content,
+      categories,
+      thumbnailImageKey,
+    }: CreatePostRequestBody = body;
 
     // 投稿をDBに生成
     const data = await prisma.post.create({
