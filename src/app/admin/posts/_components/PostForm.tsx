@@ -1,5 +1,9 @@
 "use client";
-import { useEffect, useState } from "react";
+
+import { supabase } from "@/utils/supabase";
+import { v4 as uuidv4 } from "uuid"; // 固有IDを生成するライブラリ
+import { ChangeEvent, useEffect, useState } from "react";
+import Image from "next/image";
 
 type Category = {
   id: number;
@@ -11,14 +15,14 @@ type PostFormProps = {
   onSubmit: (data: {
     title: string;
     content: string;
-    thumbnailUrl: string;
+    thumbnailImageKey: string;
     categories: { id: number }[];
   }) => Promise<void>;
   onDelete?: () => Promise<void>; //削除機能が必要な場合だけ渡す
   initialData?: {
     title: string;
     content: string;
-    thumbnailUrl: string;
+    thumbnailImageKey: string;
     selectedCategoryId: number[];
   };
   submitLabel: string;
@@ -37,7 +41,10 @@ export const PostForm: React.FC<PostFormProps> = ({
   //title,content,thumbnailUrl,の状態を管理（初期値は空）
   const [title, setTitle] = useState<string>(""); //titleを管理
   const [content, setContent] = useState<string>(""); //本文を管理
-  const [thumbnailUrl, setThumbnailUrl] = useState(""); //サムネイルを管理
+  const [thumbnailImageKey, setThumbnailImageKey] = useState(""); //アップロード後のpathをここに
+  const [thumbnailImageUrl, setThumbnailImageUrl] = useState<null | string>(
+    null
+  );
   const [categories, setCategories] = useState<Category[]>([]); //カテゴリー一覧を管理(配列)
   const [selectedCategories, setSelectedCategories] = useState<number[]>([]); //選ばれたカテゴリーIDたち　選択状態を保持（新規作成で送信するための用途）
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -46,7 +53,7 @@ export const PostForm: React.FC<PostFormProps> = ({
     if (initialData) {
       setTitle(initialData.title);
       setContent(initialData.content);
-      setThumbnailUrl(initialData.thumbnailUrl);
+      setThumbnailImageKey(initialData.thumbnailImageKey);
       setSelectedCategories(initialData.selectedCategoryId);
     }
   }, [initialData]);
@@ -65,6 +72,22 @@ export const PostForm: React.FC<PostFormProps> = ({
     fetchCategories();
   }, []);
 
+  useEffect(() => {
+    if (!thumbnailImageKey) return;
+    // アップロード時に取得した、thumbnailImageKeyを用いて画像のURLを取得
+    const fetcher = async () => {
+      const {
+        data: { publicUrl },
+      } = await supabase.storage
+        .from("post-thumbnail")
+        .getPublicUrl(thumbnailImageKey);
+
+      setThumbnailImageUrl(publicUrl);
+    };
+
+    fetcher();
+  }, [thumbnailImageKey]);
+
   const handleSubmit = async (e: React.FormEvent) => {
     //フォームが送信された時に動く関数
     e.preventDefault(); //フォーム送信時のリロードを防ぐ役割
@@ -77,7 +100,7 @@ export const PostForm: React.FC<PostFormProps> = ({
       await onSubmit({
         title,
         content,
-        thumbnailUrl,
+        thumbnailImageKey: thumbnailImageKey,
         categories: selectedCategories.map((id) => ({ id })),
       });
     } finally {
@@ -91,37 +114,82 @@ export const PostForm: React.FC<PostFormProps> = ({
     );
     setSelectedCategories(selected);
   };
+
+  //画像アップロード時の処理
+  const handleImageChange = async (
+    event: ChangeEvent<HTMLInputElement>
+  ): Promise<void> => {
+    if (!event.target.files || event.target.files.length == 0) {
+      return; //画像が選択されていないのでreturn
+    }
+    const file = event.target.files[0]; //選択された画像を取得
+    const filePath = `private/${uuidv4()}`; //ファイルパスを指定
+    // Supabaseに画像をアップロード
+    const { data, error } = await supabase.storage
+      .from("post-thumbnail") // ここでバケット名を指定
+      .upload(filePath, file, {
+        cacheControl: "3600",
+        upsert: false,
+      });
+
+    // アップロードに失敗したらエラーを表示して終了
+    if (error) {
+      alert(error.message);
+      return;
+    }
+
+    // data.pathに、画像固有のkeyが入っているので、thumbnailImageKeyに格納する
+    setThumbnailImageKey(data.path);
+  };
+
   return (
     <form onSubmit={handleSubmit}>
-      <label>タイトル</label>
+      <label htmlFor="title">タイトル</label>
       <input
         type="text"
+        id="title"
         value={title}
         onChange={(e) => setTitle(e.target.value)}
         className="border border-stone-300 rounded-lg p-3 w-full mb-4"
         disabled={isSubmitting}
       ></input>
 
-      <label>内容</label>
+      <label htmlFor="content">内容</label>
       <textarea
+        id="content"
         value={content}
         onChange={(e) => setContent(e.target.value)}
         className="border border-stone-300 rounded-lg p-3 w-full mb-4"
         disabled={isSubmitting}
       ></textarea>
 
-      <label>サムネイルURL</label>
+      <label htmlFor="thumbnailImageKey" className="block">
+        サムネイルURL
+      </label>
       <input
-        type="text"
-        value={thumbnailUrl}
-        onChange={(e) => setThumbnailUrl(e.target.value)}
-        className="border border-stone-300 rounded-lg p-3 w-full mb-4"
+        type="file"
+        id="thumbnailImageKey"
+        onChange={handleImageChange}
+        accept="image/*"
         disabled={isSubmitting}
+        className="mb-4"
       ></input>
+      {thumbnailImageUrl && (
+        <Image
+          src={thumbnailImageUrl}
+          alt="サムネイル"
+          className="mb-4"
+          width={256}
+          height={160}
+        />
+      )}
 
-      <label>カテゴリー</label>
+      <label htmlFor="category" className="block">
+        カテゴリー
+      </label>
       <select
         multiple //複数選択できるように
+        id="category"
         value={selectedCategories.map(String)}
         onChange={handleChangeCategory}
         className="border border-stone-300 rounded-lg p-3 w-full mb-4"

@@ -4,6 +4,7 @@ import { useParams } from "next/navigation";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { CategoryForm } from "../../posts/_components/CategoryForm";
+import { useSupabaseSession } from "@/app/_hooks/useSupabaseSession";
 
 //カテゴリー編集(更新、削除)ページ
 const EditCategoryPage: React.FC = () => {
@@ -11,22 +12,32 @@ const EditCategoryPage: React.FC = () => {
   const router = useRouter();
   const [name, setName] = useState(""); //初期値は空
   const [isLoading, setIsLoading] = useState(false);
+  const { token } = useSupabaseSession();
 
   useEffect(() => {
+    if (!token) return;
     const fetchCategory = async () => {
-      const res = await fetch(`/api/admin/categories/${id}`);
+      const res = await fetch(`/api/admin/categories/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       const data = await res.json();
       setName(data.category.name);
     };
     fetchCategory();
-  }, [id]);
+  }, [id, token]);
 
   //編集処理(PUT)
   const handleUpdate = async (name: string) => {
+    if (!token) return;
     setIsLoading(true); //開始時にtrue
     const res = await fetch(`/api/admin/categories/${id}`, {
       method: "PUT",
-      headers: { "Content-Type": "application/json" }, //json形式で送る
+      headers: {
+        "Content-Type": "application/json", //json形式で送る
+        Authorization: `Bearer ${token}`,
+      },
       body: JSON.stringify({ name }),
     });
     setIsLoading(false); //完了後にfalse
@@ -39,11 +50,13 @@ const EditCategoryPage: React.FC = () => {
   };
   //削除処理(DELETE)
   const handleDelete = async () => {
+    if (!token) return;
     const ok = confirm("本当に削除しますか？"); //ユーザーに確認ポップアップを出す
     if (!ok) return; //OKじゃなかったら（キャンセルされたら＝falseされたら）そこで関数の処理を終了する（何もしない）
     setIsLoading(true);
     const res = await fetch(`/api/admin/categories/${id}`, {
       method: "DELETE",
+      headers: { Authorization: `Bearer ${token}` },
     });
     setIsLoading(false);
     if (res.ok) {

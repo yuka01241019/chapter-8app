@@ -1,16 +1,43 @@
-"use client";//クライアントサイドで実行
+"use client"; //クライアントサイドで実行
 
 import Link from "next/link";
+import React from "react";
+import { useSupabaseSession } from "../_hooks/useSupabaseSession";
+import { supabase } from "@/utils/supabase";
 
 export const Header: React.FC = () => {
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    window.location.href = "/";
+  };
+  const { session, isLoading } = useSupabaseSession();
+
   return (
-    <header className="bg-zinc-700 font-bold text-white py-7 px-5">
+    <header className="bg-gray-800 text-white p-6 font-bold flex justify-between items-center">
       <Link href="/" className="">
         Blog
       </Link>
-      <Link href="/contact" className="float-right">
-        お問い合わせ
-      </Link>
+      {!isLoading && (
+        <div className="flex items-center gap-4">
+          {session ? (
+            <>
+              <Link href="/admin/posts" className="">
+                管理画面
+              </Link>
+              <button onClick={handleLogout}>ログアウト</button>
+            </>
+          ) : (
+            <>
+              <Link href="/contact" className="">
+                お問い合わせ
+              </Link>
+              <Link href="/login" className="">
+                ログイン
+              </Link>
+            </>
+          )}
+        </div>
+      )}
     </header>
   );
 };

@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { useSupabaseSession } from "@/app/_hooks/useSupabaseSession";
 
 type Category = {
   id: number;
@@ -20,10 +21,19 @@ type Post = {
 //記事一覧ページ
 const AdminPostsPage: React.FC = () => {
   const [posts, setPosts] = useState<Post[]>([]); //初期値は空配列に
+  const { token } = useSupabaseSession();
+
   useEffect(() => {
+    if (!token) return; //トークンがなければ何もしない
+
     const fetchPosts = async () => {
       try {
-        const res = await fetch("/api/admin/posts");
+        const res = await fetch("/api/admin/posts", {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: token, //トークンをヘッダーにつける
+          },
+        });
         const data = await res.json();
         setPosts(data.posts);
       } catch (error) {
@@ -31,7 +41,7 @@ const AdminPostsPage: React.FC = () => {
       }
     };
     fetchPosts();
-  }, []);
+  }, [token]); //トークンが準備できたらfetchを実行
 
   return (
     <div className="space-y-4 p-4">

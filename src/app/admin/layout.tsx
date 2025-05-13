@@ -2,8 +2,10 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useRouteGuard } from "./_hooks/useRouteGuard";
 
 const AdminSideBar = ({ children }: { children: React.ReactNode }) => {
+  useRouteGuard()
   const pathname = usePathname(); //現在のパスを取得
   //children=「このレイアウト内に表示したいページの中身」
   return (

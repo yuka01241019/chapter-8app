@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { useSupabaseSession } from "@/app/_hooks/useSupabaseSession";
 
 type Category = {
   id: number;
@@ -10,10 +11,16 @@ type Category = {
 //カテゴリー一覧ページ
 const AdminCategoriesPage: React.FC = () => {
   const [categories, setCategories] = useState<Category[]>();
+  const { token } = useSupabaseSession();
   useEffect(() => {
+    if (!token) return;
     const fetchCategories = async () => {
       try {
-        const res = await fetch("/api/admin/categories");
+        const res = await fetch("/api/admin/categories", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
         const data = await res.json();
         setCategories(data.categories);
       } catch (error) {
@@ -21,7 +28,7 @@ const AdminCategoriesPage: React.FC = () => {
       }
     };
     fetchCategories();
-  }, []);
+  }, [token]);
 
   return (
     <div className="space-y-4 p-4">

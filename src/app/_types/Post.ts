@@ -5,7 +5,7 @@ export type Post = {
   id: number;
   title: string;
   content: string;
-  thumbnailUrl: string;
+  thumbnailImageKey: string;
   createdAt: string;
   updatedAt: string;
   postCategories: { category: { id: number; name: string } }[];
@@ -15,6 +15,6 @@ export type Post = {
 export type CreatePost = {
   title: string;
   content: string;
-  thumbnailUrl: string;
+  thumbnailImageKey: string;
   categories: { id: number }[];
 };
