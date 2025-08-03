@@ -197,7 +197,7 @@ export const PostForm: React.FC<PostFormProps> = ({
       >
         {/* <option value=""></option> */}
 
-        {categories.map((category) => {
+        {categories?.map((category) => {
           //カテゴリー一覧データを元に選択肢を自動で作成
           return (
             <option key={category.id} value={category.id}>
